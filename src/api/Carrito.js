@@ -9,19 +9,19 @@ class Carrito extends Api {
    * - DELETE: '/:id/productos/:id_prod' - Eliminar un producto del carrito por su id de carrito y de producto
    * */
   createCart() {
-    return this.post(`/`);
+    return this.post(`/carrito/`);
   }
   deleteCart(id) {
-    return this.delete(`/${id}`);
+    return this.delete(`/carrito/${id}`);
   }
   getCartContent(id) {
-    return this.get(`/${id}/productos`);
+    return this.get(`/carrito/${id}/productos`);
   }
   updateCartContent(id, product) {
-    return this.post(`/${id}/productos`, product);
+    return this.post(`/carrito/${id}/productos`, product);
   }
   deleteProductById(id, id_prod) {
-    return this.delete(`/${id}/productos/${id_prod}`);
+    return this.delete(`/carrito/${id}/productos/${id_prod}`);
   }
 }
 
