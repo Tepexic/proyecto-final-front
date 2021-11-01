@@ -21,12 +21,25 @@
         <div class="my-4 text-subtitle-1">$ {{ product.precio }}</div>
       </v-card-text>
       <v-card-actions class="flex-grow-0">
-        <v-btn color="orange lighten-2" text> Añadir al Carrito </v-btn>
+        <v-btn color="primary" text @click="$emit('add', product)">
+          <v-icon left>mdi-cart</v-icon>
+          <span> Añadir al Carrito </span>
+        </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="orange" icon v-if="isAdmin">
+        <v-btn
+          color="secondary"
+          icon
+          v-if="isAdmin"
+          @click="$emit('edit', product)"
+        >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn color="orange" icon v-if="isAdmin">
+        <v-btn
+          color="secondary"
+          icon
+          v-if="isAdmin"
+          @click="$emit('delete', product)"
+        >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </v-card-actions>
