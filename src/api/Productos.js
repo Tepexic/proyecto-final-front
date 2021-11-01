@@ -16,8 +16,8 @@ class Productos extends Api {
   createNewProduct(product) {
     return this.post(`/productos`, product);
   }
-  updateProductById(id) {
-    return this.put(`/productos/${id}`);
+  updateProductById(id, data) {
+    return this.put(`/productos/${id}`, data);
   }
   deleteProductById(id) {
     return this.delete(`/productos/${id}`);

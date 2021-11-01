@@ -1,30 +1,81 @@
 <template>
-  <div class="d-flex flex-wrap align-stretch">
-    <product
-      v-for="product in products"
-      :key="product.id"
-      :product="product"
-      :isAdmin="userRole"
+  <div>
+    <v-row class="ma-2" v-if="userRole">
+      <v-spacer></v-spacer>
+      <v-btn color="primary" @click="addProduct">
+        <v-icon>mdi-plus</v-icon>
+        <span>Agregar Producto</span>
+      </v-btn>
+    </v-row>
+    <div class="d-flex flex-wrap align-stretch">
+      <product
+        v-for="product in products"
+        :key="product.id"
+        :product="product"
+        :isAdmin="userRole"
+        @delete="handleDelete"
+        @edit="handleEdit"
+      />
+    </div>
+    <!-- Delete confirmation modal -->
+    <v-row justify="center">
+      <v-dialog v-model="dialog" persistent max-width="600">
+        <v-card>
+          <v-card-title class="text-h5"> Confirmar acción </v-card-title>
+          <v-card-text>
+            Esta acción no se puede deshacer. ¿Está seguro?
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary" text @click="dialog = false">
+              Cancelar
+            </v-btn>
+            <v-btn color="error" text @click="deleteProduct"> Eliminar </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+    <!-- Edit/New product modal -->
+    <edit-product-modal
+      :show="editModalShow"
+      :currentProduct="selectedProduct"
+      @cancel="cancelProductEdition"
+      @save="saveProduct"
     />
   </div>
 </template>
 
 <script>
 import Product from "@/components/Product.vue";
+import EditProductModal from "@/components/EditProductModal.vue";
+
 import productos from "@/api/Productos";
 import account from "@/api/Account";
 import withAsync from "@/helpers/withAsync";
+import {
+  productData,
+  setProducts,
+  roleData,
+  setRole,
+} from "@/services/tiendita.js";
 
 export default {
   name: "Productos",
   data() {
     return {
-      products: [],
-      userRole: null,
+      dialog: false,
+      productToDelete: null,
+      selectedProduct: null,
+      editModalShow: false,
     };
+  },
+  computed: {
+    ...productData,
+    ...roleData,
   },
   components: {
     Product,
+    EditProductModal,
   },
   methods: {
     async fetchProducts() {
@@ -32,7 +83,7 @@ export default {
       if (error) {
         console.error(error);
       } else {
-        this.products = data;
+        setProducts(data);
       }
     },
     async fetchUserRole() {
@@ -40,8 +91,75 @@ export default {
       if (error) {
         console.error(error);
       } else {
-        this.userRole = data.admin;
+        setRole(data.admin);
       }
+    },
+    async deleteProduct() {
+      const { error } = await withAsync(
+        productos.deleteProductById,
+        productos,
+        this.productToDelete.id
+      );
+      if (error) {
+        console.error(error);
+      } else {
+        this.fetchProducts();
+        this.productToDelete = null;
+      }
+      this.dialog = false;
+    },
+    async updateProduct(product) {
+      const { error } = await withAsync(
+        productos.updateProductById,
+        productos,
+        product.id,
+        product
+      );
+      if (error) {
+        console.error(error);
+      } else {
+        this.fetchProducts();
+      }
+    },
+    async createProduct(product) {
+      const { error } = await withAsync(
+        productos.createNewProduct,
+        productos,
+        product
+      );
+      if (error) {
+        console.error(error);
+      } else {
+        this.fetchProducts();
+      }
+    },
+    handleEdit(product) {
+      this.selectedProduct = product;
+      this.editModalShow = true;
+    },
+    handleDelete(product) {
+      this.productToDelete = product;
+      this.dialog = true;
+    },
+    addProduct() {
+      this.selectedProduct = null;
+      this.editModalShow = true;
+    },
+    editProduct(product) {
+      this.selectedProduct = { ...product };
+      this.editModalShow = true;
+    },
+    cancelProductEdition() {
+      this.selectedProduct = null;
+      this.editModalShow = false;
+    },
+    saveProduct(product) {
+      if (this.selectedProduct) {
+        this.updateProduct(product);
+      } else {
+        this.createProduct(product);
+      }
+      this.editModalShow = false;
     },
   },
   mounted() {
