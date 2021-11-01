@@ -1,7 +1,5 @@
 import axios from "axios";
 
-export const axiosInstance = axios.create({ baseURL: Api.BASE_URL });
-
 export class Api {
   static BASE_URL = process.env.VUE_APP_BASE_URL;
 
@@ -25,3 +23,5 @@ export class Api {
     return this.axios.delete(url, config);
   }
 }
+
+export const axiosInstance = axios.create({ baseURL: Api.BASE_URL });
