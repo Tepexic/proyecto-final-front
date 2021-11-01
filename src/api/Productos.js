@@ -11,16 +11,16 @@ class Productos extends Api {
     return this.get(`/productos`);
   }
   getProductById(id) {
-    return this.get(`/${id}`);
+    return this.get(`/productos/${id}`);
   }
   createNewProduct(product) {
-    return this.post(`/`, product);
+    return this.post(`/productos`, product);
   }
   updateProductById(id) {
-    return this.put(`/${id}`);
+    return this.put(`/productos/${id}`);
   }
   deleteProductById(id) {
-    return this.delete(`/${id}`);
+    return this.delete(`/productos/${id}`);
   }
 }
 
