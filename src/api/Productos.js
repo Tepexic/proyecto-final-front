@@ -8,7 +8,7 @@ class Productos extends Api {
    * - DELETE: '/:id' - Borra un producto por su id (disponible para administradores)
    * */
   getProducts() {
-    return this.get(`/`);
+    return this.get(`/productos`);
   }
   getProductById(id) {
     return this.get(`/${id}`);
