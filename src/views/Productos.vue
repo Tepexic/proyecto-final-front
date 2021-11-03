@@ -15,6 +15,7 @@
         :isAdmin="userRole"
         @delete="handleDelete"
         @edit="handleEdit"
+        @add="addToCart"
       />
     </div>
     <!-- Delete confirmation modal -->
@@ -51,12 +52,15 @@ import EditProductModal from "@/components/EditProductModal.vue";
 
 import productos from "@/api/Productos";
 import account from "@/api/Account";
+import carrito from "@/api/Carrito";
 import withAsync from "@/helpers/withAsync";
 import {
   productData,
   setProducts,
   roleData,
   setRole,
+  cartData,
+  setCart,
 } from "@/services/tiendita.js";
 
 export default {
@@ -72,6 +76,7 @@ export default {
   computed: {
     ...productData,
     ...roleData,
+    ...cartData,
   },
   components: {
     Product,
@@ -133,6 +138,25 @@ export default {
         this.fetchProducts();
       }
     },
+    async createCart() {
+      const { error, data } = await withAsync(carrito.createCart, carrito);
+      if (error) {
+        console.error(error);
+      } else {
+        setCart(data.data);
+      }
+    },
+    async addProductToCart(product) {
+      const { error } = await withAsync(
+        carrito.updateCartContent,
+        carrito,
+        this.cart.id,
+        product
+      );
+      if (error) {
+        console.error(error);
+      }
+    },
     handleEdit(product) {
       this.selectedProduct = product;
       this.editModalShow = true;
@@ -160,6 +184,14 @@ export default {
         this.createProduct(product);
       }
       this.editModalShow = false;
+    },
+    async addToCart(product) {
+      if (this.cart.id) {
+        this.addProductToCart(product);
+      } else {
+        await this.createCart();
+        this.addProductToCart(product);
+      }
     },
   },
   mounted() {
