@@ -39,3 +39,6 @@ export const cartData = {
 export const setCart = (data) => {
   state.cart = JSON.parse(JSON.stringify(data));
 };
+export const setCartProducts = (products) => {
+  state.cart.productos = products;
+};
