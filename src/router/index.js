@@ -6,18 +6,36 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Productos",
-    component: () => import("../views/Productos.vue"),
+    name: "Tienda",
+    component: () => import("@/views/Tienda.vue"),
+    redirect: "/tienda/productos",
+    children: [
+      {
+        path: "/tienda/productos",
+        name: "Productos",
+        component: () => import("@/views/Productos.vue"),
+      },
+      {
+        path: "/tienda/carrito",
+        name: "Carrito",
+        component: () => import("@/views/Carrito.vue"),
+      },
+      {
+        path: "/tienda/cuenta",
+        name: "Cuenta",
+        component: () => import("@/views/Cuenta.vue"),
+      },
+    ],
   },
   {
-    path: "/carrito",
-    name: "Carrito",
-    component: () => import("../views/Carrito.vue"),
+    path: "/login",
+    name: "Login",
+    component: () => import("@/views/Login.vue"),
   },
   {
-    path: "/cuenta",
-    name: "Cuenta",
-    component: () => import("../views/Cuenta.vue"),
+    path: "/registro",
+    name: "Registro",
+    component: () => import("@/views/Registro.vue"),
   },
 ];
 

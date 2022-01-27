@@ -20,7 +20,11 @@
           <v-tabs-slider color="white"></v-tabs-slider>
 
           <v-tab>
-            <router-link to="/" style="text-decoration: none; color: inherit">
+            <router-link
+              :to="{ name: 'Tienda' }"
+              style="text-decoration: none; color: inherit"
+              class="d-flex align-center"
+            >
               <v-icon left>mdi-store</v-icon>
               <span>Productos</span>
             </router-link>
@@ -28,8 +32,9 @@
 
           <v-tab>
             <router-link
-              to="/carrito"
+              :to="{ name: 'Carrito' }"
               style="text-decoration: none; color: inherit"
+              class="d-flex align-center"
             >
               <v-icon left>mdi-cart</v-icon>
               <span>Carrito</span>
@@ -38,11 +43,25 @@
 
           <v-tab>
             <router-link
-              to="/cuenta"
+              :to="{ name: 'Cuenta' }"
               style="text-decoration: none; color: inherit"
+              class="d-flex align-center"
             >
               <v-icon left>mdi-account</v-icon>
               <span>Cuenta</span>
+            </router-link>
+          </v-tab>
+
+          <v-spacer />
+
+          <v-tab>
+            <router-link
+              :to="{ name: 'Registro' }"
+              style="text-decoration: none; color: inherit"
+              class="d-flex align-center"
+            >
+              <v-icon left>mdi-logout</v-icon>
+              <span>Salir</span>
             </router-link>
           </v-tab>
         </v-tabs>

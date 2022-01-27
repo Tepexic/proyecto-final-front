@@ -51,14 +51,14 @@ import Product from "@/components/Product.vue";
 import EditProductModal from "@/components/EditProductModal.vue";
 
 import productos from "@/api/Productos";
-import account from "@/api/Account";
+// import account from "@/api/Account";
 import carrito from "@/api/Carrito";
 import withAsync from "@/helpers/withAsync";
 import {
   productData,
   setProducts,
   roleData,
-  setRole,
+  // setRole,
   cartData,
   setCart,
 } from "@/services/tiendita.js";
@@ -87,17 +87,20 @@ export default {
       const { error, data } = await withAsync(productos.getProducts, productos);
       if (error) {
         console.error(error);
+        if (error.status === 401) {
+          this.$router.push("/login");
+        }
       } else {
         setProducts(data);
       }
     },
     async fetchUserRole() {
-      const { error, data } = await withAsync(account.getUserRole, account);
-      if (error) {
-        console.error(error);
-      } else {
-        setRole(data.admin);
-      }
+      // const { error, data } = await withAsync(account.getUserRole, account);
+      // if (error) {
+      //   console.error(error);
+      // } else {
+      //   setRole(data.admin);
+      // }
     },
     async deleteProduct() {
       const { error } = await withAsync(
@@ -194,7 +197,7 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
     this.fetchProducts();
     this.fetchUserRole();
   },

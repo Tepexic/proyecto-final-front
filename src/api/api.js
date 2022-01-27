@@ -24,4 +24,7 @@ export class Api {
   }
 }
 
-export const axiosInstance = axios.create({ baseURL: Api.BASE_URL });
+export const axiosInstance = axios.create({
+  baseURL: Api.BASE_URL,
+  withCredentials: true,
+});

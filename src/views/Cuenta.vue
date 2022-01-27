@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import account from "@/api/Account";
-import withAsync from "@/helpers/withAsync";
-import { roleData, setRole } from "@/services/tiendita.js";
+//import account from "@/api/Account";
+// import withAsync from "@/helpers/withAsync";
+import { roleData } from "@/services/tiendita.js";
 
 export default {
   name: "Cuenta",
@@ -27,20 +27,20 @@ export default {
   },
   methods: {
     async fetchUserRole() {
-      const { error, data } = await withAsync(account.getUserRole, account);
-      if (error) {
-        console.error(error);
-      } else {
-        setRole(data.admin);
-      }
+      // const { error, data } = await withAsync(account.getUserRole, account);
+      // if (error) {
+      //   console.error(error);
+      // } else {
+      //   setRole(data.admin);
+      // }
     },
     async toggleRole() {
-      const { error, data } = await withAsync(account.toggleUserRole, account);
-      if (error) {
-        console.error(error);
-      } else {
-        setRole(data.admin);
-      }
+      // const { error, data } = await withAsync(account.toggleUserRole, account);
+      // if (error) {
+      //   console.error(error);
+      // } else {
+      //   setRole(data.admin);
+      // }
     },
   },
 };
