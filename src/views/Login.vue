@@ -51,9 +51,6 @@
 </template>
 
 <script>
-import withAsync from "@/helpers/withAsync";
-import Auth from "@/api/Auth";
-
 export default {
   name: "Login",
   data() {
@@ -71,13 +68,7 @@ export default {
       await this.$refs.form.validate();
       if (this.valid) {
         this.form.busy = true;
-        const { error } = withAsync(Auth.login, Auth, this.form);
-        if (error) {
-          console.error(error.message);
-          // this.$toast.error(error.message);
-        } else {
-          this.$router.push("/");
-        }
+        this.$store.dispatch("login", this.form);
         this.form.busy = false;
       }
     },

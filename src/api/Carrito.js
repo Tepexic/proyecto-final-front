@@ -18,7 +18,7 @@ class Carrito extends Api {
     return this.get(`/carrito/${id}/productos`);
   }
   updateCartContent(id, product) {
-    return this.post(`/carrito/${id}/productos`, product);
+    return this.post(`/carrito/${id}/productos/${product._id}`);
   }
   deleteProductById(id, id_prod) {
     return this.delete(`/carrito/${id}/productos/${id_prod}`);

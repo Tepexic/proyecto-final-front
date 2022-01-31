@@ -103,9 +103,6 @@
 </template>
 
 <script>
-import withAsync from "@/helpers/withAsync";
-import Auth from "@/api/Auth";
-
 import { phoneCodes } from "@/constants/phoneCodes.js";
 
 export default {
@@ -134,37 +131,15 @@ export default {
       await this.$refs.form.validate();
       if (this.valid) {
         this.form.busy = true;
-        await this.uploadAvatar();
-        console.log(this.form);
-        const { error } = await withAsync(
-          Auth.signup,
-          Auth,
-          this.form,
-          this.selectedPhoneCode
+        this.form.avatarUrl = await this.$store.dispatch(
+          "uploadAvatar",
+          this.form.avatar
         );
-        if (error) {
-          console.error(error);
-          // this.$toast.error(error);
-          this.form.busy = false;
-        } else {
-          // this.$toast.success("Registro exitoso");
-          this.$router.push({ name: "Tienda" });
-        }
+        this.$store.dispatch("signup", {
+          form: this.form,
+          phoneCode: this.selectedPhoneCode,
+        });
         this.form.busy = false;
-      }
-    },
-    async uploadAvatar() {
-      const { error, data } = await withAsync(
-        Auth.uploadAvatar,
-        Auth,
-        this.form.avatar
-      );
-      if (error) {
-        this.form.busy = false;
-        console.error(error);
-        // this.$toast.error(error);
-      } else {
-        this.form.avatarUrl = data.url;
       }
     },
   },

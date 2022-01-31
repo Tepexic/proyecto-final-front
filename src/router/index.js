@@ -1,41 +1,47 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+import Tienda from "@/views/Tienda.vue";
+import Productos from "@/views/Productos";
+import Carrito from "@/views/Carrito";
+import Cuenta from "@/views/Cuenta";
+import Login from "@/views/Login";
+import Registro from "@/views/Registro";
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
     name: "Tienda",
-    component: () => import("@/views/Tienda.vue"),
+    component: Tienda,
     redirect: "/tienda/productos",
     children: [
       {
         path: "/tienda/productos",
         name: "Productos",
-        component: () => import("@/views/Productos.vue"),
+        component: Productos,
       },
       {
         path: "/tienda/carrito",
         name: "Carrito",
-        component: () => import("@/views/Carrito.vue"),
+        component: Carrito,
       },
       {
         path: "/tienda/cuenta",
         name: "Cuenta",
-        component: () => import("@/views/Cuenta.vue"),
+        component: Cuenta,
       },
     ],
   },
   {
     path: "/login",
     name: "Login",
-    component: () => import("@/views/Login.vue"),
+    component: Login,
   },
   {
     path: "/registro",
     name: "Registro",
-    component: () => import("@/views/Registro.vue"),
+    component: Registro,
   },
 ];
 

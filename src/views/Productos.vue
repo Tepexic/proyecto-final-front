@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row class="ma-2" v-if="userRole">
+    <v-row class="ma-2" v-if="$store.state.user.isAdmin">
       <v-spacer></v-spacer>
       <v-btn color="primary" @click="addProduct">
         <v-icon>mdi-plus</v-icon>
@@ -9,10 +9,10 @@
     </v-row>
     <div class="d-flex flex-wrap align-stretch">
       <product
-        v-for="product in products"
-        :key="product.id"
+        v-for="product in $store.state.products"
+        :key="product._id"
         :product="product"
-        :isAdmin="userRole"
+        :isAdmin="$store.state.user.isAdmin"
         @delete="handleDelete"
         @edit="handleEdit"
         @add="addToCart"
@@ -50,19 +50,6 @@
 import Product from "@/components/Product.vue";
 import EditProductModal from "@/components/EditProductModal.vue";
 
-import productos from "@/api/Productos";
-// import account from "@/api/Account";
-import carrito from "@/api/Carrito";
-import withAsync from "@/helpers/withAsync";
-import {
-  productData,
-  setProducts,
-  roleData,
-  // setRole,
-  cartData,
-  setCart,
-} from "@/services/tiendita.js";
-
 export default {
   name: "Productos",
   data() {
@@ -73,99 +60,21 @@ export default {
       editModalShow: false,
     };
   },
-  computed: {
-    ...productData,
-    ...roleData,
-    ...cartData,
-  },
   components: {
     Product,
     EditProductModal,
   },
   methods: {
-    async fetchProducts() {
-      const { error, data } = await withAsync(productos.getProducts, productos);
-      if (error) {
-        console.error(error);
-        if (error.status === 401) {
-          this.$router.push("/login");
-        }
-      } else {
-        setProducts(data);
-      }
-    },
-    async fetchUserRole() {
-      // const { error, data } = await withAsync(account.getUserRole, account);
-      // if (error) {
-      //   console.error(error);
-      // } else {
-      //   setRole(data.admin);
-      // }
-    },
     async deleteProduct() {
-      const { error } = await withAsync(
-        productos.deleteProductById,
-        productos,
-        this.productToDelete.id
-      );
-      if (error) {
-        console.error(error);
-      } else {
-        this.fetchProducts();
-        this.productToDelete = null;
-      }
-      this.dialog = false;
-    },
-    async updateProduct(product) {
-      const { error } = await withAsync(
-        productos.updateProductById,
-        productos,
-        product.id,
-        product
-      );
-      if (error) {
-        console.error(error);
-      } else {
-        this.fetchProducts();
-      }
-    },
-    async createProduct(product) {
-      const { error } = await withAsync(
-        productos.createNewProduct,
-        productos,
-        product
-      );
-      if (error) {
-        console.error(error);
-      } else {
-        this.fetchProducts();
-      }
-    },
-    async createCart() {
-      const { error, data } = await withAsync(carrito.createCart, carrito);
-      if (error) {
-        console.error(error);
-      } else {
-        setCart(data.data);
-      }
-    },
-    async addProductToCart(product) {
-      const { error } = await withAsync(
-        carrito.updateCartContent,
-        carrito,
-        this.cart.id,
-        product
-      );
-      if (error) {
-        console.error(error);
-      }
+      this.$store.dispatch("updateProduct", this.productToDelete);
+      this.productToDelete = null;
     },
     handleEdit(product) {
       this.selectedProduct = product;
       this.editModalShow = true;
     },
     handleDelete(product) {
-      this.productToDelete = product;
+      this.productToDelete = { ...product };
       this.dialog = true;
     },
     addProduct() {
@@ -182,24 +91,21 @@ export default {
     },
     saveProduct(product) {
       if (this.selectedProduct) {
-        this.updateProduct(product);
+        this.$store.dispatch("updateProduct", product);
       } else {
-        this.createProduct(product);
+        this.$store.dispatch("createProduct", product);
       }
       this.editModalShow = false;
     },
     async addToCart(product) {
-      if (this.cart.id) {
-        this.addProductToCart(product);
-      } else {
-        await this.createCart();
-        this.addProductToCart(product);
+      if (!this.$store.state.cart._id) {
+        await this.$store.dispatch("createCart");
       }
+      this.$store.dispatch("addProductToCart", product);
     },
   },
   created() {
-    this.fetchProducts();
-    this.fetchUserRole();
+    this.$store.dispatch("fetchProducts");
   },
 };
 </script>
