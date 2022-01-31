@@ -3,7 +3,20 @@
     <v-row class="ma-2">
       <v-app-bar-title>Carrito de compras</v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn color="error" @click="emptyCart">
+      <v-btn
+        color="primary"
+        @click="buyDialog = true"
+        class="mr-4"
+        :disabled="$store.getters.getProductsInCart.length < 1"
+      >
+        <v-icon>mdi-cash</v-icon>
+        <span>Comprar Carrito</span>
+      </v-btn>
+      <v-btn
+        color="error"
+        @click="emptyCart"
+        :disabled="$store.getters.getProductsInCart.length < 1"
+      >
         <v-icon>mdi-delete</v-icon>
         <span>Vaciar Carrito</span>
       </v-btn>
@@ -42,6 +55,24 @@
         </v-card>
       </v-dialog>
     </v-row>
+    <!-- Buy Cart modal -->
+    <v-row justify="center">
+      <v-dialog v-model="buyDialog" persistent max-width="600">
+        <v-card>
+          <v-card-title class="text-h5"> Confirmar acción </v-card-title>
+          <v-card-text>
+            Por favor confirme que desea comprar los productos del carrito
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary" text @click="buyDialog = false">
+              Cancelar
+            </v-btn>
+            <v-btn color="primary" text @click="buyCart"> Comprar </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </div>
 </template>
 
@@ -59,6 +90,7 @@ export default {
       ],
       dialog: false,
       productToDelete: null,
+      buyDialog: false,
     };
   },
   methods: {
@@ -86,6 +118,15 @@ export default {
     emptyCart() {
       this.dialog = true;
       this.productToDelete = null;
+    },
+    async buyCart() {
+      this.buyDialog = false;
+      await this.$store.dispatch("buyCart");
+      this.$store.dispatch("createCart");
+      this.$store.commit(
+        "showToast",
+        "En breve recibiras un mensaje de confirmacion"
+      );
     },
   },
   async beforeMount() {

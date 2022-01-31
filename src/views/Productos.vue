@@ -66,7 +66,8 @@ export default {
   },
   methods: {
     async deleteProduct() {
-      this.$store.dispatch("updateProduct", this.productToDelete);
+      this.dialog = false;
+      this.$store.dispatch("deleteProduct", this.productToDelete);
       this.productToDelete = null;
     },
     handleEdit(product) {
@@ -105,6 +106,9 @@ export default {
     },
   },
   created() {
+    if (!this.$store.state.user._id) {
+      this.$store.dispatch("getUserData");
+    }
     this.$store.dispatch("fetchProducts");
   },
 };

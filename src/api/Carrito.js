@@ -23,6 +23,9 @@ class Carrito extends Api {
   deleteProductById(id, id_prod) {
     return this.delete(`/carrito/${id}/productos/${id_prod}`);
   }
+  buyCart(id) {
+    return this.post(`/carrito/${id}/comprar`);
+  }
 }
 
 const carrito = new Carrito();

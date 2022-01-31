@@ -19,50 +19,35 @@
         <v-tabs>
           <v-tabs-slider color="white"></v-tabs-slider>
 
-          <v-tab>
-            <router-link
-              :to="{ name: 'Tienda' }"
-              style="text-decoration: none; color: inherit"
-              class="d-flex align-center"
-            >
-              <v-icon left>mdi-store</v-icon>
-              <span>Productos</span>
-            </router-link>
+          <v-tab
+            class="d-flex align-center"
+            @click="$router.push({ name: 'Tienda' })"
+          >
+            <v-icon left>mdi-store</v-icon>
+            <span>Productos</span>
           </v-tab>
 
-          <v-tab>
-            <router-link
-              :to="{ name: 'Carrito' }"
-              style="text-decoration: none; color: inherit"
-              class="d-flex align-center"
-            >
-              <v-icon left>mdi-cart</v-icon>
-              <span>Carrito</span>
-            </router-link>
+          <v-tab
+            class="d-flex align-center"
+            @click="$router.push({ name: 'Carrito' })"
+          >
+            <v-icon left>mdi-cart</v-icon>
+            <span>Carrito</span>
           </v-tab>
 
-          <v-tab>
-            <router-link
-              :to="{ name: 'Cuenta' }"
-              style="text-decoration: none; color: inherit"
-              class="d-flex align-center"
-            >
-              <v-icon left>mdi-account</v-icon>
-              <span>Cuenta</span>
-            </router-link>
+          <v-tab
+            class="d-flex align-center"
+            @click="$router.push({ name: 'Cuenta' })"
+          >
+            <v-icon left>mdi-account</v-icon>
+            <span>Cuenta</span>
           </v-tab>
 
           <v-spacer />
 
-          <v-tab>
-            <router-link
-              :to="{ name: 'Registro' }"
-              style="text-decoration: none; color: inherit"
-              class="d-flex align-center"
-            >
-              <v-icon left>mdi-logout</v-icon>
-              <span>Salir</span>
-            </router-link>
+          <v-tab class="d-flex align-center" @click="$store.dispatch('logout')">
+            <v-icon left>mdi-logout</v-icon>
+            <span>Salir</span>
           </v-tab>
         </v-tabs>
       </template>

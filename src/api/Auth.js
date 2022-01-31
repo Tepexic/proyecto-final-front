@@ -41,6 +41,26 @@ class Auth extends Api {
       },
     });
   }
+
+  logout() {
+    return this.post("/auth/logout");
+  }
+
+  getUserData() {
+    return this.get("/auth/account");
+  }
+
+  getAdminData() {
+    return this.get("/admin/");
+  }
+
+  updateAdminData(formData) {
+    const params = {
+      email: formData.email,
+      phone: formData.phone,
+    };
+    return this.put("/admin/", params);
+  }
 }
 
 const auth = new Auth();

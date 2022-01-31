@@ -55,6 +55,12 @@ export default new Vuex.Store({
         return [];
       }
     },
+    getUserAvatar(state) {
+      return `${process.env.VUE_APP_BASE_URL.substring(
+        0,
+        process.env.VUE_APP_BASE_URL.length - 5
+      )}${state.user.avatar}`;
+    },
   },
   mutations: {
     showToast(state, message) {
@@ -81,11 +87,9 @@ export default new Vuex.Store({
     addProductToCart(state, product) {
       state.cart.products.push(product);
     },
-    setAdminEmail(state, email) {
-      state.admin.email = email;
-    },
-    setAdminPhone(state, phone) {
-      state.admin.phone = phone;
+    setAdminData(state, data) {
+      state.admin.email = data.email;
+      state.admin.phone = data.phone;
     },
   },
   actions: {
@@ -125,7 +129,7 @@ export default new Vuex.Store({
         dispatch("fetchProducts");
       }
     },
-    async createProduct({ commit }, product) {
+    async createProduct({ commit, dispatch }, product) {
       const { error } = await withAsync(
         productos.createNewProduct,
         productos,
@@ -135,7 +139,7 @@ export default new Vuex.Store({
         handleError(error);
         commit("showToast", error);
       } else {
-        this.fetchProducts();
+        dispatch("fetchProducts");
       }
     },
     async createCart({ commit }) {
@@ -177,15 +181,19 @@ export default new Vuex.Store({
         dispatch("fetchCartContent");
       }
     },
-    async fetchCartContent({ commit, state }) {
+    async fetchCartContent({ commit, state, dispatch }) {
       const { error, data } = await withAsync(
         carrito.getCartContent,
         carrito,
         state.cart._id
       );
       if (error) {
-        handleError(error);
-        commit("showToast", error);
+        if (error.status === 404) {
+          dispatch("createCart");
+        } else {
+          handleError(error);
+          commit("showToast", error);
+        }
       } else {
         commit("setCartProducts", data);
       }
@@ -193,6 +201,17 @@ export default new Vuex.Store({
     async deleteCart({ commit, state }) {
       const { error } = await withAsync(
         carrito.deleteCart,
+        carrito,
+        state.cart._id
+      );
+      if (error) {
+        handleError(error);
+        commit("showToast", error);
+      }
+    },
+    async buyCart({ commit, state }) {
+      const { error } = await withAsync(
+        carrito.buyCart,
         carrito,
         state.cart._id
       );
@@ -220,7 +239,7 @@ export default new Vuex.Store({
         router.push({ name: "Tienda" });
       }
     },
-    async signUp({ commit }, { form, phoneCode }) {
+    async signup({ commit }, { form, phoneCode }) {
       const { error, data } = await withAsync(
         auth.signup,
         auth,
@@ -233,6 +252,41 @@ export default new Vuex.Store({
       } else {
         commit("setUser", data.user);
         router.push({ name: "Tienda" });
+      }
+    },
+    async logout({ commit }) {
+      const { error } = await withAsync(auth.logout, auth);
+      if (error) {
+        if (error.status !== 401) {
+          commit("showToast", error);
+          console.error(error);
+        }
+      }
+      router.push({ name: "Login" });
+    },
+    async getUserData({ commit }) {
+      const { error, data } = await withAsync(auth.getUserData, auth);
+      if (error) {
+        handleError(error);
+        commit("showToast", error);
+      } else {
+        commit("setUser", data.data);
+      }
+    },
+    async getAdminData({ commit }) {
+      const { error, data } = await withAsync(auth.getAdminData, auth);
+      if (error) {
+        handleError(error);
+        commit("showToast", error);
+      } else {
+        commit("setAdminData", data);
+      }
+    },
+    async setAdminData({ commit }, adminData) {
+      const { error } = await withAsync(auth.updateAdminData, auth, adminData);
+      if (error) {
+        handleError(error);
+        commit("showToast", error);
       }
     },
   },
