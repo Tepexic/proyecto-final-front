@@ -15,6 +15,18 @@
 <script>
 export default {
   name: "App",
+  mounted() {
+    // client-side
+    this.$socket.on("connect", () => {
+      console.log(this.$socket.id);
+    });
+    this.$socket.on("disconnect", () => {
+      console.log(this.$socket.id);
+    });
+    this.$socket.on("messages", (data) => {
+      this.$store.commit("setMessages", data.data);
+    });
+  },
   computed: {
     showToast: {
       get() {

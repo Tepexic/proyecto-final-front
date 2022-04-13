@@ -43,6 +43,14 @@
             <span>Cuenta</span>
           </v-tab>
 
+          <v-tab
+            class="d-flex align-center"
+            @click="$router.push({ name: 'Ayuda' })"
+          >
+            <v-icon left>mdi-help</v-icon>
+            <span>Centro de Ayuda</span>
+          </v-tab>
+
           <v-spacer />
 
           <v-tab class="d-flex align-center" @click="$store.dispatch('logout')">

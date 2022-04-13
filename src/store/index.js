@@ -36,6 +36,7 @@ export default new Vuex.Store({
       phone: "",
       email: "",
     },
+    messages: [],
   },
   getters: {
     getProductsInCart(state) {
@@ -90,6 +91,9 @@ export default new Vuex.Store({
     setAdminData(state, data) {
       state.admin.email = data.email;
       state.admin.phone = data.phone;
+    },
+    setMessages(state, messages) {
+      state.messages = messages;
     },
   },
   actions: {

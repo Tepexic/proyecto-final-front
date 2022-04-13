@@ -7,6 +7,7 @@ import Carrito from "@/views/Carrito";
 import Cuenta from "@/views/Cuenta";
 import Login from "@/views/Login";
 import Registro from "@/views/Registro";
+import Ayuda from "@/views/Ayuda";
 Vue.use(VueRouter);
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
         path: "/tienda/cuenta",
         name: "Cuenta",
         component: Cuenta,
+      },
+      {
+        path: "/tienda/ayuda",
+        name: "Ayuda",
+        component: Ayuda,
       },
     ],
   },
